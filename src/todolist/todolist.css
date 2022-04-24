@@ -1,0 +1,54 @@
+.todoApp {
+  width: 600px;
+  margin: auto;
+}
+.todoTitle {
+  text-align: center;
+  color: red;
+}
+.addInput {
+  flex: 1;
+  border: none;
+  padding-left: 20px;
+  font-size: 22px;
+}
+.addInput:focus {
+  outline: none;
+}
+.topCenter {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  padding: 5px 15px;
+  display: flex;
+  align-items: center;
+}
+.plus {
+  font-size: 30px;
+  font-weight: bold;
+  padding-bottom: 6px;
+  cursor: pointer;
+}
+
+/* todo */
+.todoWrapper {
+  margin-top: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.todo {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+}
+.todoContent {
+  flex: 1;
+  margin: 0 20px;
+}
+.check {
+  margin-bottom: 0;
+}
+.deleteBtn {
+  font-size: 18px;
+  font-weight: bold;
+  color: red;
+  cursor: pointer;
+}
