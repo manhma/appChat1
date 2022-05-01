@@ -96,6 +96,7 @@ function Login() {
   };
   return (
     <div className="login">
+      <h1 style={{ width: "140px", margin: " 15px auto" }}>AppChat</h1>
       <Form
         name="normal_login"
         className="login-form"
@@ -205,8 +206,18 @@ function Login() {
           </Modal>
         </Form.Item>
       </Form>
-      <button>đăng nhập bằng fb</button>
-      <button onClick={handleLoginGg}>đăng nhập bằng gg</button>
+      <hr></hr>
+      <Button
+        style={{
+          color: "white",
+          borderColor: "red",
+          backgroundColor: "red",
+          width: "100%",
+        }}
+        onClick={handleLoginGg}
+      >
+        Đăng nhập bằng Google
+      </Button>
     </div>
   );
 }

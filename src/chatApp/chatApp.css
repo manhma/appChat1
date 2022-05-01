@@ -96,7 +96,7 @@
 }
 .listMessage{
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     max-height: 100%;
     overflow-y: auto;
     padding: 10px 20px ;

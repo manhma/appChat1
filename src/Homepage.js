@@ -1,14 +1,16 @@
 import React from "react";
 import ChatRoom from "./chatApp";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { auth, db } from "./firebase/config";
 import { useSelector } from "react-redux";
 import { collection, getDocs } from "firebase/firestore";
 import { Avatar, Dropdown, Menu } from "antd";
-import { MessageOutlined } from "@ant-design/icons";
+import { MessageOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import TodoPage from "./todolist/Index";
 
 export default function Homepage() {
+  const navigate = useNavigate();
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -33,21 +35,42 @@ export default function Homepage() {
     <div style={{ display: "flex" }}>
       <div
         className="navHomepage"
-        style={{ width: "65px", backgroundColor: "#0091ff" }}
+        style={{ width: "65px", height: "100vh", backgroundColor: "#0091ff" }}
       >
-        <Dropdown overlay={logOutBtn} trigger={["click"]}>
-          <Avatar
-            style={{ margin: "10px 0 0 5px", border: "1px solid white" }}
-            size={50}
-            src={user.photoURL}
-          />
-        </Dropdown>
-        {/* <MessageOutlined /> */}
+        <div>
+          <Dropdown overlay={logOutBtn} trigger={["click"]}>
+            <Avatar
+              style={{
+                margin: "30px 0 10px 0",
+                border: "1px solid white",
+              }}
+              size={50}
+              src={user.photoURL}
+            />
+          </Dropdown>
+        </div>
+        <div
+          className="navElement"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <MessageOutlined style={{ margin: "20px 20px" }} />
+        </div>
+        <div
+          className="navElement"
+          onClick={() => {
+            navigate("/todo");
+          }}
+        >
+          <CheckSquareOutlined style={{ margin: "20px 20px" }} />
+        </div>
       </div>
       <div style={{ width: "100%" }}>
-        <ChatRoom />
+        <Outlet />
+        {/* <ChatRoom /> */}
+        {/* <TodoPage /> */}
       </div>
-      {/* <button onClick={handleSignOut}>log Out</button> */}
     </div>
   );
 }

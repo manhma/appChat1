@@ -15,11 +15,13 @@ export default function SidebarElement({ roomInf }) {
     const displayUserId = roomInf.uid.filter((id) => {
       return id != myUser.uid;
     });
-    if (displayUserId.length == 1) {
+    if (roomInf.uid.length == 2) {
       const [a] = users.filter((user) => {
         return user.uid == displayUserId[0];
       });
       setDisplayUser(a);
+    } else {
+      setDisplayUser(roomInf);
     }
   }, []);
   const handleSelectRoom = () => {
@@ -27,6 +29,7 @@ export default function SidebarElement({ roomInf }) {
   };
   const roomStyle =
     roomInf.id == roomSelectedId ? { backgroundColor: "#e4e6eb" } : {};
+
   return (
     <div
       onClick={handleSelectRoom}
@@ -34,9 +37,13 @@ export default function SidebarElement({ roomInf }) {
       style={roomStyle}
     >
       <div style={{ display: "flex" }}>
-        <Avatar size={50} src={displayUser.photoURL} />
+        <Avatar size={50} src={displayUser.photoURL}>
+          {displayUser.roomName}
+        </Avatar>
         <div className="contentSidebarElememt">
-          <div className="displayName">{displayUser.displayName}</div>
+          <div className="displayName">
+            {displayUser.displayName || displayUser.roomName}
+          </div>
           <div>{roomInf.lastMessage}</div>
         </div>
       </div>

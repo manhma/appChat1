@@ -1,43 +1,55 @@
+import { async } from "@firebase/util";
+import { Divider, Input } from "antd";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { delTodo, editTodo } from "../actions/todo";
+import { db } from "../firebase/config";
 
-export default function Todo({ todo }) {
-  const dispatch = useDispatch();
+export default function Todo({ todo, todos, setTodos, setDep }) {
   const [editBox, setEditBox] = useState(false);
   const [editInput, setEditInput] = useState(todo.title);
+
+  const handleDeleteTodo = async (id) => {
+    await deleteDoc(doc(db, "todos", `${id}`));
+    setDep(new Date().getTime());
+  };
+  const handleEditTodo = async (id) => {
+    const a = doc(db, "todos", `${id}`);
+    await updateDoc(a, {
+      title: editInput,
+    });
+    setEditBox(false);
+    setDep(new Date().getTime());
+  };
+
   return (
-    <div className="todo">
-      {editBox ? (
-        <div>
-          <input
-            className="todoContent"
-            value={editInput}
-            onChange={(e) => setEditInput(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              dispatch(editTodo(todo.id, editInput));
-              setEditBox(false);
-            }}
-          >
-            done
-          </button>
-        </div>
-      ) : (
-        <>
-          <input type={"checkbox"} className="check" />
-          <div
-            className="todoContent"
-            onDoubleClick={() => setEditBox(!editBox)}
-          >
-            {todo.title}
+    <div>
+      <div className="todo">
+        {editBox ? (
+          <div>
+            <Input
+              size="large"
+              className="todoContent"
+              value={editInput}
+              onChange={(e) => setEditInput(e.target.value)}
+              onPressEnter={() => handleEditTodo(todo.todoId)}
+            />
           </div>
-          <div className="deleteBtn" onClick={() => dispatch(delTodo(todo.id))}>
-            x
-          </div>
-        </>
-      )}
+        ) : (
+          <>
+            <input type="checkbox" className="check" />
+            <div className="todoContent" onDoubleClick={() => setEditBox(true)}>
+              {todo.title}
+            </div>
+            <div
+              className="deleteBtn"
+              onClick={() => handleDeleteTodo(todo.todoId)}
+            >
+              x
+            </div>
+          </>
+        )}
+      </div>
+      <Divider />
     </div>
   );
 }

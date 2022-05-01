@@ -2,11 +2,7 @@ import { Col, Row } from "antd";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  getDataMessages,
-  getDataRooms,
-  getDataUsers,
-} from "../actions/chatData";
+import { getDataRooms, getDataUsers } from "../actions/chatData";
 import { db } from "../firebase/config";
 import Chatwindow from "./Chatwindow";
 import Sidebar from "./Sidebar";
@@ -28,13 +24,10 @@ export default function ChatRoom() {
       }));
       dispatch(getDataRooms(data));
     });
-    // const unsub3 = onSnapshot(collection(db, "messages"), (snapShot) => {
-    //   const data = snapShot.docs.map((doc) => ({
-    //     ...doc.data(),
-    //     id: doc.id,
-    //   }));
-    //   dispatch(getDataMessages(data));
-    // });
+    return () => {
+      unsub1();
+      unsub2();
+    };
   }, []);
   return (
     <div>

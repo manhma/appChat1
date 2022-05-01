@@ -12,8 +12,10 @@ export default function Chatwindow() {
   const roomInf = useSelector((state) => state.roomData);
   const roomInfLength = Object.keys(roomInf).length;
   const [messageOfRoom, setMessageOfRoom] = useState([]);
+
+  // console.log("roomInf: ", roomInf);
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("timestamp"));
+    const q = query(collection(db, "messages"), orderBy("timestamp", "desc"));
     const unsub3 = onSnapshot(q, (snapShot) => {
       const data = snapShot.docs.map((doc) => ({
         ...doc.data(),
@@ -23,9 +25,11 @@ export default function Chatwindow() {
         return message.roomid == roomInf.roomid;
       });
       setMessageOfRoom(a);
+      return () => {
+        unsub3();
+      };
     });
   }, [roomInf]);
-
   const [input, setInput] = useState("");
   const handleAddMess = () => {
     if (input.trim().length !== 0) {
@@ -38,15 +42,14 @@ export default function Chatwindow() {
     setInput("");
   };
 
-  const messagesEndRef = useRef(null);
+  // const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    // console.log("======================================");
-    console.log("messageOfRoom: ", messageOfRoom);
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   console.log("messageOfRoom: ", messageOfRoom);
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
-  useEffect(scrollToBottom, [messageOfRoom]);
+  // useEffect(scrollToBottom, [messageOfRoom]);
   return (
     <>
       {roomInfLength === 0 ? (
@@ -58,7 +61,8 @@ export default function Chatwindow() {
               <Avatar size={50} src={roomInf.displayUser.photoURL} />
               <div className="displayInf">
                 <div className="displayName">
-                  {roomInf.displayUser.displayName}
+                  {roomInf.displayUser.displayName ||
+                    roomInf.displayUser.roomName}
                 </div>
                 <div>hoat dong 1p truoc</div>
               </div>
@@ -75,7 +79,7 @@ export default function Chatwindow() {
                   <Message key={message.id} message={message} myUser={myUser} />
                 );
               })}
-              <div ref={messagesEndRef} />
+              {/* <div ref={messagesEndRef} /> */}
             </div>
           </div>
           <div className="chatting">

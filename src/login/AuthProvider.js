@@ -25,7 +25,7 @@ export default function AuthProvider(props) {
     return () => {
       onSub();
     };
-  }, [navigate]);
+  }, []);
 
   return <div>{props.children}</div>;
 }

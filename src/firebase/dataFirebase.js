@@ -25,6 +25,10 @@ export const addData1 = async (collectionName, data) => {
   }
 };
 
+export const addData = async (collectionName, data) => {
+  const docRef = await addDoc(collection(db, collectionName), data);
+};
+
 ///them du lieu ma documentName tu minh dat
 
 export const addData2 = async (collectionName, documentId, data) => {
