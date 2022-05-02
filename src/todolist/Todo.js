@@ -4,7 +4,7 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../firebase/config";
 
-export default function Todo({ todo, todos, setTodos, setDep }) {
+export default function Todo({ todo, setDep }) {
   const [editBox, setEditBox] = useState(false);
   const [editInput, setEditInput] = useState(todo.title);
 
@@ -20,7 +20,13 @@ export default function Todo({ todo, todos, setTodos, setDep }) {
     setEditBox(false);
     setDep(new Date().getTime());
   };
-
+  const handleSelected = async (id) => {
+    const a = doc(db, "todos", `${id}`);
+    await updateDoc(a, {
+      completed: !todo.completed,
+    });
+    setDep(new Date().getTime());
+  };
   return (
     <div>
       <div className="todo">
@@ -36,8 +42,20 @@ export default function Todo({ todo, todos, setTodos, setDep }) {
           </div>
         ) : (
           <>
-            <input type="checkbox" className="check" />
-            <div className="todoContent" onDoubleClick={() => setEditBox(true)}>
+            <input
+              type="checkbox"
+              className="check"
+              checked={todo.completed}
+              onChange={() => handleSelected(todo.todoId)}
+            />
+            <div
+              style={{
+                textDecorationLine: todo.completed ? "line-through" : "none",
+                color: todo.completed ? "rgb(245, 195, 195)" : "black",
+              }}
+              className="todoContent"
+              onDoubleClick={() => setEditBox(true)}
+            >
               {todo.title}
             </div>
             <div

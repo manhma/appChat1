@@ -5,12 +5,15 @@ import { Divider, Input } from "antd";
 import { addData2, getData } from "../firebase/dataFirebase";
 import { async } from "@firebase/util";
 import { useSelector } from "react-redux";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export default function TodoPage() {
   const myUser = useSelector((state) => state.checkAuth.user);
   const [todos, setTodos] = useState([]);
   const [inputTodo, setInputTodo] = useState("");
   const [dep, setDep] = useState();
+
   useEffect(async () => {
     const a = await getData("todos");
     setTodos(a);
@@ -23,6 +26,17 @@ export default function TodoPage() {
       completed: false,
     });
     setInputTodo("");
+    setDep(new Date().getTime());
+  };
+  const [filterBtn, setFilterBtn] = useState(1);
+
+  const handleDeleteCompleted = () => {
+    const completedTodos = todos.filter((todo) => {
+      return todo.completed == true;
+    });
+    completedTodos.map(async (todo) => {
+      await deleteDoc(doc(db, "todos", `${todo.todoId}`));
+    });
     setDep(new Date().getTime());
   };
   return (
@@ -43,26 +57,60 @@ export default function TodoPage() {
         </div>
         <Divider />
         <div className="todoWrapper">
-          {todos.map((todo, index) => {
-            return (
-              <Todo
-                todo={todo}
-                key={index}
-                todos={todos}
-                setTodos={setTodos}
-                setDep={setDep}
-              />
-            );
-          })}
+          {filterBtn == 1
+            ? todos.map((todo, index) => {
+                return <Todo todo={todo} key={index} setDep={setDep} />;
+              })
+            : filterBtn == 2
+            ? todos
+                .filter((todo) => {
+                  return todo.completed == false;
+                })
+                .map((todo, index) => {
+                  return <Todo todo={todo} key={index} setDep={setDep} />;
+                })
+            : todos
+                .filter((todo) => {
+                  return todo.completed == true;
+                })
+                .map((todo, index) => {
+                  return <Todo todo={todo} key={index} setDep={setDep} />;
+                })}
         </div>
         <div className="filterTodo">
-          <div>Còn 7 việc</div>
+          <div className="filterBtn">Còn {todos.length} việc</div>
           <div className="filterBtns">
-            <div className="filterBtn">Tất cả</div>
-            <div className="filterBtn">Chưa làm</div>
-            <div className="filterBtn">Đã làm</div>
+            <div
+              className="filterBtn"
+              style={{
+                border: filterBtn == 1 ? "1px solid black" : "none",
+              }}
+              onClick={() => setFilterBtn(1)}
+            >
+              Tất cả
+            </div>
+            <div
+              className="filterBtn"
+              style={{
+                border: filterBtn == 2 ? "1px solid black" : "none",
+              }}
+              onClick={() => setFilterBtn(2)}
+            >
+              Chưa làm
+            </div>
+            <div
+              className="filterBtn"
+              style={{
+                border: filterBtn == 3 ? "1px solid black" : "none",
+              }}
+              onClick={() => setFilterBtn(3)}
+            >
+              Đã làm
+            </div>
           </div>
-          <div>Xóa việc đã làm</div>
+          <div className="filterBtn" onClick={handleDeleteCompleted}>
+            Xóa việc đã làm
+          </div>
         </div>
       </div>
     </div>

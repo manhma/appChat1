@@ -1,10 +1,8 @@
 import React from "react";
-import ChatRoom from "./chatApp";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { auth, db } from "./firebase/config";
 import { useSelector } from "react-redux";
-import { collection, getDocs } from "firebase/firestore";
 import { Avatar, Dropdown, Menu } from "antd";
 import { MessageOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import TodoPage from "./todolist/Index";

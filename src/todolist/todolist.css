@@ -73,4 +73,7 @@
 }
 .filterBtn{
   margin: 0 8px;
+  padding: 0 4px ;
+  border-radius: 3px;
+  cursor: pointer;
 }
